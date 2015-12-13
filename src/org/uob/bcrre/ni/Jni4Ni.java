@@ -36,7 +36,7 @@ public class Jni4Ni extends JFrame {
 	}
 
 	/**
-	 * Constructor method takes arguements specifying the devices connected to the
+	 * Constructor method takes arguments specifying the devices connected to the
 	 * host system. Edit the main method according to the devices that you have
 	 * connected.
 	 * @param devices List of device specifications connected to the host system.
