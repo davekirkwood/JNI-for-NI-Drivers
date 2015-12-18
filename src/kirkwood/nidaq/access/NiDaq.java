@@ -1,14 +1,14 @@
-package org.uob.bcrre.nidaq.access;
+package kirkwood.nidaq.access;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
-
-import org.uob.bcrre.nidaq.jna.Nicaiu;
 
 import com.sun.jna.Memory;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
+
+import kirkwood.nidaq.jna.Nicaiu;
 
 /**
  * Middle layer to call methods in the DLL wrapper.

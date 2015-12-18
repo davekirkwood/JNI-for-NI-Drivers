@@ -1,4 +1,4 @@
-package org.uob.bcrre.nidaq.jna;
+package kirkwood.nidaq.jna;
 //import com.ochafik.lang.jnaerator.runtime.LibraryExtractor;
 //import com.ochafik.lang.jnaerator.runtime.MangledFunctionMapper;
 import java.nio.DoubleBuffer;

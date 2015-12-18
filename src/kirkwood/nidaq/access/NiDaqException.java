@@ -1,4 +1,4 @@
-package org.uob.bcrre.nidaq.access;
+package kirkwood.nidaq.access;
 
 public class NiDaqException extends Exception {
 

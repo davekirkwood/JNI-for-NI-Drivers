@@ -1,4 +1,4 @@
-package org.uob.bcrre.nidaq;
+package kirkwood.nidaq;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -9,11 +9,11 @@ import java.awt.event.WindowEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import org.uob.bcrre.nidaq.access.NiDaq;
-import org.uob.bcrre.nidaq.access.NiDaqException;
-import org.uob.bcrre.nidaq.jna.Nicaiu;
-
 import com.sun.jna.Pointer;
+
+import kirkwood.nidaq.access.NiDaq;
+import kirkwood.nidaq.access.NiDaqException;
+import kirkwood.nidaq.jna.Nicaiu;
 
 public class NiDaqUIDemo extends JFrame {
 

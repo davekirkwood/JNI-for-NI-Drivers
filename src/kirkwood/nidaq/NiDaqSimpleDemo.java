@@ -1,13 +1,13 @@
-package org.uob.bcrre.nidaq;
+package kirkwood.nidaq;
 
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
-import org.uob.bcrre.nidaq.access.NiDaq;
-import org.uob.bcrre.nidaq.access.NiDaqException;
-import org.uob.bcrre.nidaq.jna.Nicaiu;
-
 import com.sun.jna.Pointer;
+
+import kirkwood.nidaq.access.NiDaq;
+import kirkwood.nidaq.access.NiDaqException;
+import kirkwood.nidaq.jna.Nicaiu;
 
 public class NiDaqSimpleDemo {
 	private static NiDaq daq = new NiDaq();
