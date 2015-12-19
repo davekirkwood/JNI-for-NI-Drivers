@@ -9,6 +9,12 @@ import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
 
+/**
+ * This class demonstrates writing to a digital output port and reading
+ * from an analogue in channel.
+ *
+ * THIS IS NOT COMPLETE
+ */
 public class NiDaqSimpleDemo {
 	private static NiDaq daq = new NiDaq();
 	
@@ -30,7 +36,7 @@ public class NiDaqSimpleDemo {
 	}
 	
 	public static void readAnalogueIn() throws NiDaqException {
-		Pointer aiTask = daq.createTask("Task");
+		Pointer aiTask = daq.createTask("AITask");
 //		daq.createAICurrentChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, 0.0, 0.02, Nicaiu.DAQmx_Val_Amps, Nicaiu.DAQmx_Val_Default, 249.0, "");
 		daq.createAIVoltageChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
 		daq.cfgSampClkTiming(aiTask, "", 10000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
@@ -46,7 +52,6 @@ public class NiDaqSimpleDemo {
 		
 		daq.stopTask(aiTask);
 		daq.clearTask(aiTask);
-		
 		
 		System.out.println("Acquired " + read + " points.");
 

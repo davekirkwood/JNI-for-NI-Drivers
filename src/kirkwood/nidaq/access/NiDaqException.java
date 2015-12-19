@@ -23,6 +23,30 @@ public class NiDaqException extends Exception {
 		case -200220:
 			errorMessage = "DAQmxErrorInvalidDeviceID";
 			break;
+		case -200089:
+			errorMessage = "DAQmxErrorDuplicateTask";
+			break;
+		case -200498:
+			errorMessage = "DAQmxErrorInvalidRangeOfObjectsSyntaxInString";
+			break;
+		case -200477:
+			errorMessage = "DAQmxErrorCanNotPerformOpWhenNoDevInTask";
+			break;
+		case -200088:
+			errorMessage = "DAQmxErrorInvalidTask";
+			break;
+		case -200478:
+			errorMessage = "DAQmxErrorCanNotPerformOpWhenNoChansInTask";
+			break;
+		case -200525:
+			errorMessage = "DAQmxErrorReadChanTypeMismatch";
+			break;
+		case -50103:
+			errorMessage = "DAQmxErrorPALResourceReserved";
+			break;
+		case -200552:
+			errorMessage = "DAQmxErrorInvalidCharInString";
+			break;
 		default:
 			errorMessage = "Unknown error.";
 		}
