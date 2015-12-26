@@ -29,6 +29,8 @@ public interface Nicaiu extends StdCallLibrary {
 	public static final int DAQmx_Val_Default = (int)-1;
 	public static final int DAQmx_Val_Rising = (int)10280;
 	public static final int DAQmx_Val_FiniteSamps = (int)10178;
+	public static final int DAQmx_Val_OnDemand = (int)10390;
+
 	
 	/**
 	 * Original signature : <code>int32 DAQmxCreateDOChan(TaskHandle, const char[], const char[], int32)</code><br>

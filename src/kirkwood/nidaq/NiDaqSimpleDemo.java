@@ -20,7 +20,7 @@ public class NiDaqSimpleDemo {
 	
 	public static void writeDigitalOut(byte[] data) throws NiDaqException {
 		Pointer doTask = daq.createTask("Task");
-		daq.createDOChan(doTask, "Dev1/port0/line0:3", "", Nicaiu.DAQmx_Val_ChanForAllLines);
+		daq.createDOChan(doTask, "Dev1/port0", "", Nicaiu.DAQmx_Val_ChanForAllLines);
 		daq.startTask(doTask);
 		daq.writeDigitalLines(doTask, 1, 1, 10, Nicaiu.DAQmx_Val_GroupByChannel, data);
 		daq.stopTask(doTask);
@@ -37,7 +37,6 @@ public class NiDaqSimpleDemo {
 	
 	public static void readAnalogueIn() throws NiDaqException {
 		Pointer aiTask = daq.createTask("AITask");
-//		daq.createAICurrentChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, 0.0, 0.02, Nicaiu.DAQmx_Val_Amps, Nicaiu.DAQmx_Val_Default, 249.0, "");
 		daq.createAIVoltageChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
 		daq.cfgSampClkTiming(aiTask, "", 10000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
 		
@@ -107,8 +106,11 @@ public class NiDaqSimpleDemo {
 	
 	public static void main(String[] args) {
 		try {
-			writeDigitalOut(new byte[] { 1,1,1,1 });
-		} catch(NiDaqException e) {}
+			writeDigitalOut(new byte[] { 0,0,0,0 });
+//			readAnalogueIn();
+		} catch(NiDaqException e) {
+			e.printStackTrace();
+		}
 		new AnalogInThread();
 	}
 }

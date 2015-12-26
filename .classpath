@@ -4,5 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="libs/jna/jna.jar"/>
 	<classpathentry kind="lib" path="libs/jna/platform.jar"/>
+	<classpathentry kind="lib" path="libs/jfreechart/jcommon-1.0.17.jar"/>
+	<classpathentry kind="lib" path="libs/jfreechart/jfreechart-1.0.14.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

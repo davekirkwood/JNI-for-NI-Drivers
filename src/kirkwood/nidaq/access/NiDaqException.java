@@ -47,6 +47,21 @@ public class NiDaqException extends Exception {
 		case -200552:
 			errorMessage = "DAQmxErrorInvalidCharInString";
 			break;
+		case -200081:
+			errorMessage = "DAQmxErrorSampleRateNumChansConvertPeriodCombo";
+			break;
+		case -200229:
+			errorMessage = "DAQmxErrorReadBufferTooSmall";
+			break;
+		case -200278:
+			errorMessage = "DAQmxErrorSamplesWillNeverBeAvailable";
+			break;
+		case -200279:
+			errorMessage = "DAQmxErrorSamplesNoLongerAvailable";
+			break;
+		case -200077:
+			errorMessage = "DAQmxErrorInvalidAttributeValue";
+			break;
 		default:
 			errorMessage = "Unknown error.";
 		}

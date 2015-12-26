@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.jna.Nicaiu;
+import kirkwood.nidaq.ui.NIChartPanel;
 
 import com.sun.jna.Pointer;
 
@@ -29,7 +30,6 @@ import com.sun.jna.Pointer;
 public class NiDaqUIDemo extends JFrame {
 
 	private NiDaq daq;
-	
 	
 	/**
 	 * Digital out task
@@ -90,22 +90,22 @@ public class NiDaqUIDemo extends JFrame {
 	}
 
 	private class AnalogueChannelsPanel extends JPanel {
-		private JLabel[] statusLabels;
+		private NIChartPanel[] charts;
 		public AnalogueChannelsPanel(int channelCount) {
 			this.setLayout(new GridLayout(1,channelCount));
-			statusLabels = new JLabel[channelCount];
+			charts = new NIChartPanel[channelCount];
 			for(int i=0; i<channelCount; i++) {
-				statusLabels[i] = new JLabel();
-				this.add(statusLabels[i]);
+				charts[i] = new NIChartPanel(i);
+				this.add(charts[i]);
 			}
-			setStatusLabels(null);
+			updateCharts(null);
 		}
-		public void setStatusLabels(double[] data) {
-			for(int i=0; i<statusLabels.length; i++) {
+		public void updateCharts(double[] data) {
+			for(int i=0; i<charts.length; i++) {
 				if(data != null && data.length > i) {
-					statusLabels[i].setText(String.valueOf(data[i]));
+					charts[i].update(data[i]);
 				} else {
-					statusLabels[i].setText("?");
+					charts[i].update(0);
 				}
 			}
 		}
@@ -156,7 +156,7 @@ public class NiDaqUIDemo extends JFrame {
 			try {
 				while(running) {
 					readAIData();
-					Thread.sleep(3000);
+					Thread.sleep(100);
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -173,18 +173,17 @@ public class NiDaqUIDemo extends JFrame {
 			
 			System.out.print("Initialising digital out...");
 			doTask = daq.createTask("Task1");
-			daq.createDOChan(doTask, "Dev1/port0/line0:3", "", Nicaiu.DAQmx_Val_ChanForAllLines);
+			daq.createDOChan(doTask, "Dev1/port0", "", Nicaiu.DAQmx_Val_ChanForAllLines);
 			daq.startTask(doTask);
 			System.out.println("Done.");
-			
-//			aiTask = doTask;
-//			System.out.print("Initialising analog in...");
-//			aiTask = daq.createTask("AITask");
-//			daq.createAIVoltageChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-//			daq.cfgSampClkTiming(aiTask, "", 10000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
-//			daq.startTask(aiTask);
-//			System.out.println("Done.");
-						
+
+			System.out.print("Initialising analog in...");
+			aiTask = daq.createTask("AITask");
+			daq.createAIVoltageChannel(aiTask, "Dev1/ai0:Dev1/ai7", "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
+			daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
+			daq.startTask(aiTask);
+			System.out.println("Done.");
+
 		} catch(NiDaqException e) {
 			e.printStackTrace();
 		}
@@ -205,50 +204,26 @@ public class NiDaqUIDemo extends JFrame {
 		}
 	}
 	
+	private int INPUT_BUFFER_SIZE = 8;
+	
 	private synchronized void readAIData() {
-//		Integer read = new Integer(0);
-//		double[] buffer = new double[1];
-//		DoubleBuffer inputBuffer =DoubleBuffer.wrap(buffer);
-//		IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
-//		try {
-//			daq.readAnalogF64(aiTask, 1000, 10.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, 1000, samplesPerChannelRead);
-//			for(int i=0; i<buffer.length; i++) {
-//				System.out.println(buffer[i]);
-//			}
-//			analogChannelsPanel.setStatusLabels(buffer);
-//		} catch(NiDaqException e) {
-//			e.printStackTrace();
-//		}
 
-		Pointer aiTask;
 		try {
-			aiTask = daq.createTask("AITask");
-	//		daq.createAICurrentChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, 0.0, 0.02, Nicaiu.DAQmx_Val_Amps, Nicaiu.DAQmx_Val_Default, 249.0, "");
-			daq.createAIVoltageChannel(aiTask, "Dev1/ai0:0", "", Nicaiu.DAQmx_Val_Cfg_Default, -10.0, 10.0, Nicaiu.DAQmx_Val_Volts, null);
-			daq.cfgSampClkTiming(aiTask, "", 10000.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 1000);
-			
-			daq.startTask(aiTask);
-	
-			Integer read = new Integer(0);
-			double[] buffer = new double[1000];
-			
-			DoubleBuffer inputBuffer =DoubleBuffer.wrap(buffer);
-			IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
-			daq.readAnalogF64(aiTask, 1000, 10.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, 1000, samplesPerChannelRead);
-			
-			daq.stopTask(aiTask);
-			daq.clearTask(aiTask);
-			
-			System.out.println("Acquired " + read + " points.");
-	
-			for(int i=0; i<buffer.length; i++) {
-				System.out.println(buffer[i]);
-			}
 
-			analogChannelsPanel.setStatusLabels(buffer);
+			Integer read = new Integer(1);
+			double[] buffer = new double[INPUT_BUFFER_SIZE];
+			
+			DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
+			IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
+			daq.readAnalogF64(aiTask, 1, 10.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, INPUT_BUFFER_SIZE, samplesPerChannelRead);
+						
+			analogChannelsPanel.updateCharts(buffer);
+//			System.out.println("-------------");
+//			for(double d : buffer) {
+//				System.out.println(d);
+//			}
 			
 		} catch (NiDaqException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -261,10 +236,10 @@ public class NiDaqUIDemo extends JFrame {
 			daq.clearTask(doTask);
 			System.out.println("Done.");
 
-//			System.out.print("Closing analog in...");
-//			daq.stopTask(aiTask);
-//			daq.clearTask(aiTask);
-//			System.out.println("Done.");
+			System.out.print("Closing analog in...");
+			daq.stopTask(aiTask);
+			daq.clearTask(aiTask);
+			System.out.println("Done.");
 
 			System.out.println("DAQ closed");
 		} catch(NiDaqException e) {
