@@ -1,3 +1,25 @@
+/**
+ ********************************************************************* 
+ * JNI4NI Java Native Interface wrapper for National Instruments DAQ.
+ ********************************************************************* 
+ * (c) 2015 David Kirkwood            Email: davekirkwood@hotmail.com 
+ ********************************************************************* 
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *    
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *    
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
 package kirkwood.nidaq.access;
 
 import java.nio.DoubleBuffer;
@@ -70,18 +92,6 @@ public class NiDaq {
 	 * Creates channel(s) to measure voltage and adds the channel(s) to the task you specify with taskHandle. If your 
 	 * measurement requires the use of internal excitation or you need the voltage to be scaled by excitation, call 
 	 * DAQmxCreateAIVoltageChanWithExcit.
-	 * 
-
-
-
-Value  Description 
- 
-minVal  float64  
-maxVal  float64  
-units  int32 
-Return Value
-	 * 
-	 * 
 	 * 
 	 * @param taskHandle The task to which to add the channels that this function creates.
 	 * 
