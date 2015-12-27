@@ -1,7 +1,6 @@
 package kirkwood.nidaq.ui;
 
 import java.awt.Color;
-import java.awt.Font;
 
 import javax.swing.JPanel;
 
