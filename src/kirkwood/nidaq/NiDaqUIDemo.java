@@ -1,6 +1,5 @@
 package kirkwood.nidaq;
 
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -8,34 +7,74 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
-import kirkwood.nidaq.access.NiDaq;
 import kirkwood.nidaq.access.NiDaqException;
 import kirkwood.nidaq.ui.NIChartPanel;
 
 /**
- * This class is intended to offer a user interface with switch buttons
- * to switch digital out channels on and off. The UI will also include
- * graphs for the analogue input channels.
+ * This demo contains a graph (using JFreeChart charts) that outputs a rolling
+ * view of the output of the analogue input lines.
  * 
- * THIS IS NOT COMPLETE.
+ * This class is developed to demonstrate the NI-DAQ functions with a NI-Daq USB-6000
+ * device. The hardware is demonstrated by connecting the digital output pins to the
+ * analogue input pins and observing the output of the console.
+ * 
+ * The demo may well work with other National Instruments DAQ devices, but it is hard
+ * coded to treat the device as Dev1, with 4 digital out lines and 8 analog in lines.
  */
 public class NiDaqUIDemo extends JFrame implements Runnable {
 
-	private NiDaq daq;
+	/**
+	 * Default Serial version ID.
+	 */
+	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Array of JFreeChart charts in line order.
+	 */
 	private NIChartPanel[] charts;
 	
+	/**
+	 * Number of analog input channels.
+	 */
 	private int AI_CHANNEL_COUNT = 8;
 	
+	/**
+	 * Simple flag to indicate the thread should continue running. This
+	 * is set to false when the window closes, causing the 
+	 */
 	private boolean running = true;
 
+	/**
+	 * Synchronised getter method for the running flag.
+	 * @return
+	 */
+	public synchronized boolean isRunning() {
+		return running;
+	}
+
+	/**
+	 * Synchronised setter method for the running flag.
+	 * @param running
+	 */
+	public synchronized void setRunning(boolean running) {
+		this.running = running;
+	}
+
 	
-	public NiDaqUIDemo(String deviceName, int digitalChannelCount, int analogueChannelCount) {
+	/**
+	 * Constructor method. Currently this class only demonstrates the simple use of the
+	 * NI-Daq USB-6000 device. TODO Add device configuration parameters, such as number of lines,
+	 * device name, etc.
+	 */
+	public NiDaqUIDemo() {
 		initialiseUi();
 		this.setVisible(true);
 		startDaq();
 	}
 	
+	/**
+	 * Initialise the graphics.
+	 */
 	private void initialiseUi() {
 		this.setSize(640,400);
 		
@@ -56,6 +95,10 @@ public class NiDaqUIDemo extends JFrame implements Runnable {
 		});
 	}
 
+	/**
+	 * Update the charts with the array of data read from the DAQ device.
+	 * @param data
+	 */
 	public void updateCharts(double[] data) {
 		for(int i=0; i<charts.length; i++) {
 			if(data != null && data.length > i) {
@@ -66,27 +109,33 @@ public class NiDaqUIDemo extends JFrame implements Runnable {
 		}
 	}
 
+	/**
+	 * Thread run method, loops until the running flag is cleared (by the user
+	 * closing the window). The method reads from the analog in channels of the DAQ
+	 * device and updates the UI charts.
+	 */
 	public void run() {
-			while(running) {
+			while(isRunning()) {
 				try {
-					double[] data = NiDaqSimpleDemo.readAnalogueIn();
+					double[] data = NiDaqSimpleDemo.readAnalogueIn(8);
 					if(data != null) {
 						updateCharts(data);
 					}
 				} catch (NiDaqException e) {
 					// TODO Auto-generated catch block
-//					e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
 //			NiDaqSimpleDemo.writeDigitalOut(new byte[] { 0,0,0,0 });
 	}
 
-	/**************************************** DAQ Interface methods ****************************************/
-
-	
+	/**
+	 * Start the DAQ by writing to the digital out lines and starting the
+	 * thread to read the analog in lines.
+	 */
 	private void startDaq() {
 		System.out.print("Initialising...");
-		running = true;
+		setRunning(true);
 		try {
 			NiDaqSimpleDemo.writeDigitalOut(new byte[] { 1,1,1,1 });
 		} catch(NiDaqException e) {
@@ -96,15 +145,21 @@ public class NiDaqUIDemo extends JFrame implements Runnable {
 		
 		new Thread(this).start();
 	}
-	
-	
+
+	/**
+	 * Close the DAQ by setting the running flag to false.
+	 */
 	private synchronized void closeDaq()  {
-		running = false;
+		setRunning(false);
 		System.out.println("DAQ closed");
 	}
 	
+	/**
+	 * Main method to demonstrate the use of a NI-DAQ USB-6000 device. 
+	 * @param args
+	 */
 	public static void main(String[] args) {
-		new NiDaqUIDemo("Dev1", 4, 8);
+		new NiDaqUIDemo();
 	}
 	
 }

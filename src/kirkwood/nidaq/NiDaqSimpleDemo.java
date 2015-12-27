@@ -13,12 +13,25 @@ import kirkwood.nidaq.jna.Nicaiu;
  * This class demonstrates writing to a digital output port and reading
  * from analogue in channels.
  * 
- * THIS IS NOT COMPLETE.
+ *  * This class is developed to demonstrate the NI-DAQ functions with a NI-Daq USB-6000
+ * device. The hardware is demonstrated by connecting the digital output pins to the
+ * analogue input pins and observing the output of the console.
+ * 
+ * The demo may well work with other National Instruments DAQ devices, but it is hard
+ * coded to treat the device as Dev1, with 4 digital out lines and 8 analog in lines.
  */
 public class NiDaqSimpleDemo {
 
+	/**
+	 * NiDaq middle layer to call NiDaq function.
+	 */
 	private static NiDaq daq = new NiDaq();
 	
+	/**
+	 * Write the specified data to the digital out lines.
+	 * @param data
+	 * @throws NiDaqException
+	 */
 	public static void writeDigitalOut(byte[] data) throws NiDaqException {
 		Pointer doTask = daq.createTask("Task");
 		daq.createDOChan(doTask, "Dev1/port0", "", Nicaiu.DAQmx_Val_ChanForAllLines);
@@ -28,9 +41,8 @@ public class NiDaqSimpleDemo {
 		daq.clearTask(doTask);
 	}
 	
-	private static int INPUT_BUFFER_SIZE = 8;
 	
-	public static double[] readAnalogueIn() throws NiDaqException {
+	public static double[] readAnalogueIn(int inputBufferSize) throws NiDaqException {
 		Pointer aiTask = null;
 		try {
 			aiTask = daq.createTask("AITask");
@@ -38,11 +50,11 @@ public class NiDaqSimpleDemo {
 			daq.cfgSampClkTiming(aiTask, "", 100.0, Nicaiu.DAQmx_Val_Rising, Nicaiu.DAQmx_Val_FiniteSamps, 8);
 			daq.startTask(aiTask);
 			Integer read = new Integer(0);
-			double[] buffer = new double[INPUT_BUFFER_SIZE];
+			double[] buffer = new double[inputBufferSize];
 			
 			DoubleBuffer inputBuffer = DoubleBuffer.wrap(buffer);
 			IntBuffer samplesPerChannelRead = IntBuffer.wrap(new int[] {read} );
-			daq.readAnalogF64(aiTask, 1, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, INPUT_BUFFER_SIZE, samplesPerChannelRead);
+			daq.readAnalogF64(aiTask, -1, 100.0, Nicaiu.DAQmx_Val_GroupByChannel, inputBuffer, inputBufferSize, samplesPerChannelRead);
 	
 			daq.stopTask(aiTask);
 			daq.clearTask(aiTask);
@@ -56,17 +68,19 @@ public class NiDaqSimpleDemo {
 			} catch(NiDaqException e2) {}
 			throw(e);
 		}
-
 	}
 
-	/************************** Main method *****************************/
-	
+	/**
+	 * Simple demo main method. Writes to the digital lines and then loops, reading
+	 * the analog input lines.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			writeDigitalOut(new byte[] { 1,1,1,1 });
 			while(true) {
 				try {
-					double[] data = readAnalogueIn();
+					double[] data = readAnalogueIn(8);
 					if(data != null) {
 						for(int i=0; i<data.length; i++) {
 							System.out.println("AI" + i + " = " + (data[i] < 0.01 ? "" : data[i]));
@@ -75,7 +89,7 @@ public class NiDaqSimpleDemo {
 						System.out.println("Error");
 					}
 				} catch(NiDaqException e) {
-//					e.printStackTrace();
+					e.printStackTrace();
 				}
 			}
 		} catch(NiDaqException e) {
