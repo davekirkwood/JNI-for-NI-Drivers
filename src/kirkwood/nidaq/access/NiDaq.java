@@ -182,21 +182,14 @@ public class NiDaq {
 	
 	/**
 	 * 
-Transitions the task from the committed state to the running state, which begins measurement or generation. Using this function is required for some applications and optional for others.
-
-If you do not use this function, a measurement task starts automatically when a read operation begins. The autoStart parameter of the NI-DAQmx Write functions determines if a generation task starts automatically when you use an NI-DAQmx Write function.
-
-If you do not call DAQmxStartTask and DAQmxStopTask when you call NI-DAQmx Read functions or NI-DAQmx Write functions multiple times, such as in a loop, the task starts and stops repeatedly. Starting and stopping a task repeatedly reduces the performance of the application.
-
-Parameters
-Input  
-Name Type Description 
-taskHandle  TaskHandle The task to start. 
-
-Return Value
-
-	 * 
-	 * 
+	 * Transitions the task from the committed state to the running state, which begins measurement or generation. Using this function is required for some applications and optional for others.
+	 * If you do not use this function, a measurement task starts automatically when a read operation begins. The autoStart parameter of the NI-DAQmx Write functions determines if a generation task starts automatically when you use an NI-DAQmx Write function.
+	 * If you do not call DAQmxStartTask and DAQmxStopTask when you call NI-DAQmx Read functions or NI-DAQmx Write functions multiple times, such as in a loop, the task starts and stops repeatedly. Starting and stopping a task repeatedly reduces the performance of the application.
+	 * Parameters
+	 * 	Input   
+	 * 	Name Type Description  
+	 * 	taskHandle  TaskHandle The task to start. 
+	 * Return Value
 	 * Start task.
 	 * @param taskHandle The pointer to the task.
 	 * @throws NiDaqException
