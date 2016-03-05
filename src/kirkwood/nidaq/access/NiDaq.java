@@ -346,5 +346,9 @@ public class NiDaq {
 		}
 		throw new NiDaqException(errorCode);
 	}
+	
+	public void resetDevice(String devName) throws NiDaqException {
+		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes()));
+	}
 
 }

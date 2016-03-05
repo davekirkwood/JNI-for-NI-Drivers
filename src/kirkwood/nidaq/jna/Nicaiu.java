@@ -118,5 +118,11 @@ public interface Nicaiu extends StdCallLibrary {
 	 * <i>native declaration : line 2417</i>
 	 */
 	int DAQmxClearTask(Pointer taskHandle);
+	
+	/**
+	 * Original signature : <code>int32 DAQmxResetDevice(const char[])</code><br>
+	 * <i>native declaration : line 2967</i>
+	 */
+	int DAQmxResetDevice(byte deviceName[]);
 
 }
