@@ -53,6 +53,7 @@ public interface Nicaiu extends StdCallLibrary {
 	public static final int DAQmx_Val_FiniteSamps = (int)10178;
 	public static final int DAQmx_Val_ContSamps = (int)10123;
 	public static final int DAQmx_Val_OnDemand = (int)10390;
+	
 
 	
 	/**
@@ -65,6 +66,13 @@ public interface Nicaiu extends StdCallLibrary {
 	 * Original signature : <code>int32 DAQmxCreateTask(const char[], TaskHandle*)</code><br>
 	 * <i>native declaration : line 2410</i>
 	 */
+	
+	int DAQmxCreateDIChan(Pointer taskHandle, byte lines[], byte nameToAssignToLines[], int lineGrouping);
+	/**
+	 * Original signature : <code>int32 DAQmxCreateDOChan(TaskHandle, const char[], const char[], int32)</code><br>
+	 * <i>native declaration : line 2511</i><br>
+	 */
+	
 	int DAQmxCreateTask(byte taskName[], PointerByReference taskHandle);
 	
 	/**
@@ -111,6 +119,13 @@ public interface Nicaiu extends StdCallLibrary {
 	 * Original signature : <code>int32 DAQmxStopTask(TaskHandle)</code><br>
 	 * <i>native declaration : line 2415</i>
 	 */
+	
+	int DAQmxReadDigitalU32(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode, DoubleBuffer readArray, NativeLong arraySizeInSamps, IntBuffer sampsPerChanRead, NativeLongByReference reserved);
+	/**
+	 * Original signature : <code>int32 DAQmxReadDigitalScalarU32(TaskHandle, float64, uInt32*, bool32*)</code><br>
+	 * <i>native declaration : line 2615</i>
+	 */
+	
 	int DAQmxStopTask(Pointer taskHandle);
 	
 	/**
@@ -124,5 +139,21 @@ public interface Nicaiu extends StdCallLibrary {
 	 * <i>native declaration : line 2967</i>
 	 */
 	int DAQmxResetDevice(byte deviceName[]);
+	
+	int DAQmxGetNthTaskChannel(Pointer taskHandle, NativeLong index, String buffer, int bufferSize);
+	/**
+	 * Original signature : <code>int32 DAQmxGetNthTaskChannel(TaskHandle, uInt32, char[], int32)</code><br>
+	 * <i>native declaration : line 2424</i>
+	 */
+	
+	int DAQmxGetPhysicalChanName(Pointer taskHandle, String channel, String data, NativeLong bufferSize);
+	/**
+	 * *** Set/Get functions for DAQmx_PhysicalChanName ***<br>
+	 * Original signature : <code>int32 DAQmxGetPhysicalChanName(TaskHandle, const char[], char*, uInt32)</code><br>
+	 * <i>native declaration : line 5375</i>
+	 */
+	
+	
+	
 
 }

@@ -126,6 +126,51 @@ public class NiDaq {
 	 * 
 	 * @throws NiDaqException
 	 */
+	
+	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+	}
+	
+	/**
+	 * Creates channel(s) to measure voltage and adds the channel(s) to the task you specify with taskHandle. If your 
+	 * measurement requires the use of internal excitation or you need the voltage to be scaled by excitation, call 
+	 * DAQmxCreateAIVoltageChanWithExcit.
+	 * 
+	 * @param taskHandle The task to which to add the channels that this function creates.
+	 * 
+	 * @param physicalChannel The names of the physical channels to use to create virtual channels. You can specify a 
+	 * list or range of physical channels.
+	 * 
+	 * @param nameToAssignToChannel The name(s) to assign to the created virtual channel(s). If you do not specify a name, 
+	 * NI-DAQmx uses the physical channel name as the virtual channel name. If you specify your own names for 
+	 * nameToAssignToChannel, you must use the names when you refer to these channels in other NI-DAQmx functions.
+	 * If you create multiple virtual channels with one call to this function, you can specify a list of names separated 
+	 * by commas. If you provide fewer names than the number of virtual channels you create, NI-DAQmx automatically assigns 
+	 * names to the virtual channels.
+	 * 
+	 * @param terminalConfig The input terminal configuration for the channel.
+	 * 		DAQmx_Val_Cfg_Default   At run time, NI-DAQmx chooses the default terminal configuration for the channel. 
+	 * 		DAQmx_Val_RSE   Referenced single-ended mode  
+	 * 		DAQmx_Val_NRSE   Non-referenced single-ended mode  
+	 * 		DAQmx_Val_Diff   Differential mode  
+	 * 		DAQmx_Val_PseudoDiff   Pseudodifferential mode  
+	 * 
+	 * @param minVal The minimum value, in units, that you expect to measure.
+	 * 
+	 * @param maxVal The maximum value, in units, that you expect to measure.
+	 * 
+	 * @param units The units to use to return the voltage measurements. 
+	 * 		DAQmx_Val_Volts   volts 
+	 * 		DAQmx_Val_FromCustomScale Units a custom scale specifies. Use customScaleName to specify a custom scale. 
+	 * 
+	 * @param customScaleName The name of a custom scale to apply to the channel. To use this parameter, you must set 
+	 * units to DAQmx_Val_FromCustomScale. If you do not set units to DAQmx_Val_FromCustomScale, you must set customScaleName 
+	 * to NULL.
+	 * 
+	 * @throws NiDaqException
+	 */
+	
+	
 	public void createAIVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, String customScaleName) throws NiDaqException {
 		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes()));
 	}
@@ -223,6 +268,7 @@ public class NiDaq {
 	 * 
 	 * @throws NiDaqException
 	 */
+	@SuppressWarnings("deprecation")
 	public void writeDigitalLines(Pointer taskHandle, int numSamplesPerChannel, int autoStart, double timeOut, int dataLayout, byte[] data) throws NiDaqException {
 		Pointer writeArray = new Memory(data.length);
 		writeArray.write(0, data ,0, data.length);
@@ -270,6 +316,43 @@ public class NiDaq {
 	public void readAnalogF64(Pointer taskHandle, int numSampsPerChan, double timeout, int fillMode, DoubleBuffer readArray, int arraySizeInSamps, IntBuffer sampsPerChanRead) throws NiDaqException {
 		checkError(Nicaiu.INSTANCE.DAQmxReadAnalogF64(taskHandle, numSampsPerChan, timeout, new NativeLong(fillMode), readArray, new NativeLong(arraySizeInSamps), sampsPerChanRead, null));
 	}
+	
+	
+	/**
+	 * Reads multiple Digital input samples from a task that contains one or more digital input channels.
+	 * 
+	 * @param taskHandle The task to read samples from.
+	 * 
+	 * @param numSampsPerChan The number of samples, per channel, to read. The default value of -1 (DAQmx_Val_Auto) reads 
+	 * all available samples. If readArray does not contain enough space, this function returns as many samples as fit in 
+	 * readArray. NI-DAQmx determines how many samples to read based on whether the task acquires samples continuously or 
+	 * acquires a finite number of samples. If the task acquires samples continuously and you set this parameter to -1, 
+	 * this function reads all the samples currently available in the buffer. If the task acquires a finite number of 
+	 * samples and you set this parameter to -1, the function waits for the task to acquire all requested samples, then 
+	 * reads those samples. If you set the Read All Available Samples property to TRUE, the function reads the samples 
+	 * currently available in the buffer and does not wait for the task to acquire all requested samples.
+	 * 
+	 * @param timeout The amount of time, in seconds, to wait for the function to read the sample(s). To specify an 
+	 * infinite wait, pass -1 (DAQmx_Val_WaitInfinitely). This function returns an error if the timeout elapses. A 
+	 * value of 0 indicates to try once to read the requested samples. If all the requested samples are read, the function 
+	 * is successful. Otherwise, the function returns a timeout error and returns the samples that were actually read.
+	 * 
+	 * @param fillMode Specifies whether or not the samples are interleaved. 
+	 * DAQmx_Val_GroupByChannel Group by channel (non-interleaved) or DAQmx_Val_GroupByScanNumber Group by scan number (interleaved).
+	 *  
+	 * @param readArray The array to read samples into, organized according to fillMode.
+	 * 
+	 * @param arraySizeInSamps The size of the array, in samples, into which samples are read.
+	 * 
+	 * @param sampsPerChanRead The actual number of samples read from each channel.
+	 * 
+	 * @throws NiDaqException
+	 */
+	public void readDigitalF64(Pointer taskHandle, int numSampsPerChan, double timeout, int fillMode, DoubleBuffer readArray, int arraySizeInSamps, IntBuffer sampsPerChanRead) throws NiDaqException {
+		checkError(Nicaiu.INSTANCE.DAQmxReadDigitalU32(taskHandle, numSampsPerChan, timeout, new NativeLong(fillMode),readArray, new NativeLong(arraySizeInSamps), sampsPerChanRead, null));
+	}
+	
+	
 	
 	/**
 	 * Stops the task and returns it to the state it was in before you called DAQmxStartTask or called an NI-DAQmx 
@@ -351,4 +434,26 @@ public class NiDaq {
 		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes()));
 	}
 
+	
+	public void GetTerminalNameWithDevPrefix(Pointer taskHandle, String terminalName, String triggerName) throws NiDaqException{
+		
+		String chan=null;
+		int i=0;
+		boolean listindex=true;
+		while(listindex)
+		{try
+		{checkError(Nicaiu.INSTANCE.DAQmxGetNthTaskChannel(taskHandle,new NativeLong(i),chan, 256));
+		}catch(Exception e){
+			i++;
+			if(i>256)
+				listindex=false;
+		}
+		}
+		checkError(Nicaiu.INSTANCE.DAQmxGetPhysicalChanName(taskHandle, chan, chan, new NativeLong(256)));
+		
+		
+		
+	}
+	
+	
 }
