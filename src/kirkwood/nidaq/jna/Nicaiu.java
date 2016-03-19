@@ -51,6 +51,7 @@ public interface Nicaiu extends StdCallLibrary {
 	public static final int DAQmx_Val_Default = (int)-1;
 	public static final int DAQmx_Val_Rising = (int)10280;
 	public static final int DAQmx_Val_FiniteSamps = (int)10178;
+	public static final int DAQmx_Val_ContSamps = (int)10123;
 	public static final int DAQmx_Val_OnDemand = (int)10390;
 
 	
@@ -117,5 +118,11 @@ public interface Nicaiu extends StdCallLibrary {
 	 * <i>native declaration : line 2417</i>
 	 */
 	int DAQmxClearTask(Pointer taskHandle);
+	
+	/**
+	 * Original signature : <code>int32 DAQmxResetDevice(const char[])</code><br>
+	 * <i>native declaration : line 2967</i>
+	 */
+	int DAQmxResetDevice(byte deviceName[]);
 
 }
