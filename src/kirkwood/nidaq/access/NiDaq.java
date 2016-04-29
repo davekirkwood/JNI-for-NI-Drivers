@@ -22,15 +22,16 @@
 
 package kirkwood.nidaq.access;
 
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
+
+import kirkwood.nidaq.jna.Nicaiu;
 
 import com.sun.jna.Memory;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
-
-import kirkwood.nidaq.jna.Nicaiu;
 
 /**
  * Middle layer to call methods in the DLL wrapper.
@@ -352,6 +353,17 @@ public class NiDaq {
 		checkError(Nicaiu.INSTANCE.DAQmxReadDigitalU32(taskHandle, numSampsPerChan, timeout, new NativeLong(fillMode),readArray, new NativeLong(arraySizeInSamps), sampsPerChanRead, null));
 	}
 	
+	public void readDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, int fillMode, ByteBuffer readArray, int arraySizeInSamps, IntBuffer sampsPerChanRead,  IntBuffer numBytesPerSamp) throws NiDaqException {
+		checkError(Nicaiu.INSTANCE.DAQmxReadDigitalLines(taskHandle,
+														 numSampsPerChan, 
+														 timeout, 
+														 new NativeLong(fillMode), 
+														 readArray, 
+														 new NativeLong(arraySizeInSamps), 
+														 sampsPerChanRead, 
+														 numBytesPerSamp, 
+														 null));
+	}
 	
 	
 	/**

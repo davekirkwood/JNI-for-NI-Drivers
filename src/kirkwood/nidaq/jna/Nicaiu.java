@@ -23,6 +23,7 @@
 package kirkwood.nidaq.jna;
 //import com.ochafik.lang.jnaerator.runtime.LibraryExtractor;
 //import com.ochafik.lang.jnaerator.runtime.MangledFunctionMapper;
+import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
 
@@ -153,7 +154,12 @@ public interface Nicaiu extends StdCallLibrary {
 	 * <i>native declaration : line 5375</i>
 	 */
 	
-	
+	/**
+	 * Original signature : <code>int32 DAQmxReadDigitalLines(TaskHandle, int32, float64, bool32, uInt8[], uInt32, int32*, int32*, bool32*)</code><br>
+	 * <i>native declaration : line 2616</i>
+	 */
+	int DAQmxReadDigitalLines(Pointer taskHandle, int numSampsPerChan, double timeout, NativeLong fillMode, ByteBuffer readArray, NativeLong arraySizeInBytes, IntBuffer sampsPerChanRead, IntBuffer numBytesPerSamp, NativeLongByReference reserved);
+
 	
 
 }
