@@ -45,6 +45,7 @@ public interface Nicaiu extends StdCallLibrary {
 	Nicaiu INSTANCE = (Nicaiu) Native.loadLibrary("nicaiu", Nicaiu.class);
 	
 	public static final int DAQmx_Val_GroupByChannel = (int)0;
+	public static final int DAQmx_Val_ChanPerLine = (int)0;
 	public static final int DAQmx_Val_ChanForAllLines = (int)1;
 	public static final int DAQmx_Val_Cfg_Default = (int)-1;
 	public static final int DAQmx_Val_Volts = (int)10348;
