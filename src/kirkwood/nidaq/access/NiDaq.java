@@ -53,7 +53,9 @@ public class NiDaq {
 	 * @return
 	 */
 	public Pointer createTask(String taskName) throws NiDaqException {
-		byte[] btName = taskName.getBytes();
+		byte[] btName = (taskName + " ").getBytes();
+		btName[btName.length - 1] = 0;
+		
 		PointerByReference taskHandleRef = new PointerByReference();
 		checkError(Nicaiu.INSTANCE.DAQmxCreateTask(btName, taskHandleRef));
 		Pointer taskHandle = taskHandleRef.getValue();
@@ -86,7 +88,13 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createDOChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		byte[] btLines = (lines + " ").getBytes();
+		btLines[btLines.length - 1] = 0;
+
+		byte[] btNameOfLines = (nameToAssignToLines + " ").getBytes();
+		btNameOfLines[btNameOfLines.length - 1] = 0;
+		
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDOChan(taskHandle, btLines, btNameOfLines, lineGrouping));
 	}
 	
 	/**
@@ -129,7 +137,13 @@ public class NiDaq {
 	 */
 	
 	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, lines.getBytes(), nameToAssignToLines.getBytes(), lineGrouping));
+		byte[] btLines = (lines + " ").getBytes();
+		btLines[btLines.length - 1] = 0;
+
+		byte[] btNameOfLines = (nameToAssignToLines + " ").getBytes();
+		btNameOfLines[btNameOfLines.length - 1] = 0;
+		
+		checkError(Nicaiu.INSTANCE.DAQmxCreateDIChan(taskHandle, btLines, btNameOfLines, lineGrouping));
 	}
 	
 	/**
@@ -173,7 +187,18 @@ public class NiDaq {
 	
 	
 	public void createAIVoltageChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, customScaleName == null ? null : customScaleName.getBytes()));
+		byte[] btPhysicalChannel = (physicalChannel + " ").getBytes();
+		btPhysicalChannel[btPhysicalChannel.length - 1] = 0;
+
+		byte[] btNameOfChannel = (nameToAssignToChannel + " ").getBytes();
+		btNameOfChannel[btNameOfChannel.length - 1] = 0;
+
+		byte[] btCustomScaleName = (customScaleName == null) ? null : (customScaleName + " ").getBytes();
+		if (btCustomScaleName != null) {
+			btCustomScaleName[btCustomScaleName.length - 1] = 0;
+		}
+		
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAIVoltageChan(taskHandle, btPhysicalChannel, btNameOfChannel, terminalConfig, minVal, maxVal, units, btCustomScaleName));
 	}
 
 	/**
@@ -223,7 +248,18 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void createAICurrentChannel(Pointer taskHandle, String physicalChannel, String nameToAssignToChannel, int terminalConfig, double minVal, double maxVal, int units, int shuntResistorLoc, double extShuntResistorVal, String customScaleName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, physicalChannel.getBytes(), nameToAssignToChannel.getBytes(), terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, customScaleName.getBytes()));
+		byte[] btPhysicalChannel = (physicalChannel + " ").getBytes();
+		btPhysicalChannel[btPhysicalChannel.length - 1] = 0;
+
+		byte[] btNameOfChannel = (nameToAssignToChannel + " ").getBytes();
+		btNameOfChannel[btNameOfChannel.length - 1] = 0;
+
+		byte[] btCustomScaleName = (customScaleName == null) ? null : (customScaleName + " ").getBytes();
+		if (btCustomScaleName != null) {
+			btCustomScaleName[btCustomScaleName.length - 1] = 0;
+		}
+		
+		checkError(Nicaiu.INSTANCE.DAQmxCreateAICurrentChan(taskHandle, btPhysicalChannel, btNameOfChannel, terminalConfig, minVal, maxVal, units, shuntResistorLoc, extShuntResistorVal, btCustomScaleName));
 	}
 	
 	/**
@@ -427,7 +463,10 @@ public class NiDaq {
 	 * @throws NiDaqException
 	 */
 	public void cfgSampClkTiming(Pointer taskHandle, String source, double rate, int activeEdge, int sampleMode, long sampsPerChan) throws NiDaqException{
-		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, source.getBytes(), rate, activeEdge, sampleMode, sampsPerChan));
+		byte[] btSource = (source + " ").getBytes();
+		btSource[btSource.length - 1] = 0;
+		
+		checkError(Nicaiu.INSTANCE.DAQmxCfgSampClkTiming(taskHandle, btSource, rate, activeEdge, sampleMode, sampsPerChan));
 	}
 	
 	/**
@@ -443,7 +482,10 @@ public class NiDaq {
 	}
 	
 	public void resetDevice(String devName) throws NiDaqException {
-		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(devName.getBytes()));
+		byte[] btDevName = (devName + " ").getBytes();
+		btDevName[btDevName.length - 1] = 0;
+		
+		checkError(Nicaiu.INSTANCE.DAQmxResetDevice(btDevName));
 	}
 
 	
