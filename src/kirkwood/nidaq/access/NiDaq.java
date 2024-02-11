@@ -98,44 +98,28 @@ public class NiDaq {
 	}
 	
 	/**
-	 * Creates channel(s) to measure voltage and adds the channel(s) to the task you specify with taskHandle. If your 
-	 * measurement requires the use of internal excitation or you need the voltage to be scaled by excitation, call 
-	 * DAQmxCreateAIVoltageChanWithExcit.
-	 * 
+	 * Creates channel(s) to measure digital signals and adds the channel(s) to the task you specify with taskHandle.
+	 * You can group digital lines into one digital channel or separate them into multiple digital channels. If you
+	 * specify one or more entire ports in lines by using port physical channel names, you cannot separate the ports
+	 * into multiple channels. To separate ports into multiple channels, use this function multiple times with a
+	 * different port each time.
+	 *
 	 * @param taskHandle The task to which to add the channels that this function creates.
-	 * 
-	 * @param physicalChannel The names of the physical channels to use to create virtual channels. You can specify a 
-	 * list or range of physical channels.
-	 * 
-	 * @param nameToAssignToChannel The name(s) to assign to the created virtual channel(s). If you do not specify a name, 
-	 * NI-DAQmx uses the physical channel name as the virtual channel name. If you specify your own names for 
-	 * nameToAssignToChannel, you must use the names when you refer to these channels in other NI-DAQmx functions.
-	 * If you create multiple virtual channels with one call to this function, you can specify a list of names separated 
-	 * by commas. If you provide fewer names than the number of virtual channels you create, NI-DAQmx automatically assigns 
-	 * names to the virtual channels.
-	 * 
-	 * @param terminalConfig The input terminal configuration for the channel.
-	 * 		DAQmx_Val_Cfg_Default   At run time, NI-DAQmx chooses the default terminal configuration for the channel. 
-	 * 		DAQmx_Val_RSE   Referenced single-ended mode  
-	 * 		DAQmx_Val_NRSE   Non-referenced single-ended mode  
-	 * 		DAQmx_Val_Diff   Differential mode  
-	 * 		DAQmx_Val_PseudoDiff   Pseudodifferential mode  
-	 * 
-	 * @param minVal The minimum value, in units, that you expect to measure.
-	 * 
-	 * @param maxVal The maximum value, in units, that you expect to measure.
-	 * 
-	 * @param units The units to use to return the voltage measurements. 
-	 * 		DAQmx_Val_Volts   volts 
-	 * 		DAQmx_Val_FromCustomScale Units a custom scale specifies. Use customScaleName to specify a custom scale. 
-	 * 
-	 * @param customScaleName The name of a custom scale to apply to the channel. To use this parameter, you must set 
-	 * units to DAQmx_Val_FromCustomScale. If you do not set units to DAQmx_Val_FromCustomScale, you must set customScaleName 
-	 * to NULL.
-	 * 
+	 *
+	 * @param lines The names of the digital lines used to create a virtual channel. You can specify a list or range
+	 * of lines. Specifying a port and no lines is the equivalent of specifying all the lines of that port in order.
+	 * Therefore, if you specify Dev1/port0 and port 0 has eight lines, this is expanded to Dev1/port0/line0:7.
+	 *
+	 * @param nameToAssignToLines The name of the created virtual channel(s). If you create multiple virtual channels
+	 * with one call to this function, you can specify a list of names separated by commas. If you do not specify a
+	 * name, NI-DAQmx uses the physical channel name as the virtual channel name. If you specify your own names for
+	 * nameToAssignToLines, you must use the names when you refer to these channels in other NI-DAQmx functions.
+	 *
+	 * @param lineGrouping Specifies whether to group digital lines into one or more virtual channels. If you specify
+	 * one or more entire ports in lines, you must set lineGrouping to DAQmx_Val_ChanForAllLines.
+	 *
 	 * @throws NiDaqException
 	 */
-	
 	public void createDIChan(Pointer taskHandle, String lines, String nameToAssignToLines, int lineGrouping) throws NiDaqException {
 		byte[] btLines = (lines + " ").getBytes();
 		btLines[btLines.length - 1] = 0;
